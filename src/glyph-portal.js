@@ -186,8 +186,8 @@ export function mountGlyphPortal(section, { onProgress } = {}) {
     // Hand over to the real content the moment the camera move ends — the
     // content's margin (see style.css) puts it exactly over the field then.
     section.dataset.gpEntered = String(isStatic || t >= 0.999);
-    // The caption only shows before scrolling starts
-    section.dataset.gpScrolled = String(!isStatic && p > 0.005);
+    // Scroll progress, for anything that moves with it (e.g. the caption)
+    section.style.setProperty('--gp-progress', String(p));
     // rise: 0 → 1 as the field's contents rise into place (1 when static)
     const reportedRise = isStatic ? 1 : rise;
     if (p !== lastProgress || reportedRise !== lastRise) {

@@ -2534,22 +2534,28 @@ html.landing-light #pf-cursor-canvas { mix-blend-mode: difference; }
 #pf-app .pf-header { z-index: auto; }
 
 /* "Défiler pour découvrir" under SOFIA LUCAS on the landing opening: same
-   type as the header links, black on the white; gone once scrolling starts */
+   type as the header links. As you scroll it slides down and off the bottom
+   of the screen (gone by 40% of the zoom). It's white with a "difference"
+   blend, so it reads black on the white paper and white over the black
+   letter. */
 .gp [data-gp-caption] {
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(var(--gp-word-bottom, 60%) + 1.5rem);
+  top: calc(var(--gp-word-bottom, 60%) + 1.5rem + 0.5cm);
   margin: 0;
   text-align: center;
-  color: #000;
-  font-size: 0.88rem;
+  font-size: 1.17rem;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   pointer-events: none;
   visibility: hidden;
+  color: #fff;
+  mix-blend-mode: difference;
+  translate: 0 calc(min(var(--gp-progress, 0) / 0.4, 1) * (var(--gp-height, 100svh) - var(--gp-word-bottom, 60%)));
 }
 .gp[data-gp-ready] [data-gp-caption] { visibility: visible; }
-.gp[data-gp-scrolled=true] [data-gp-caption] { visibility: hidden; }
-@media (max-width: 768px) { .gp [data-gp-caption] { font-size: 0.72rem; letter-spacing: 0.08em; } }
+/* white paper inside the pin, so the caption's blend has white to work against */
+.gp [data-gp-pin] { background: #fff; }
+@media (max-width: 768px) { .gp [data-gp-caption] { font-size: 0.96rem; letter-spacing: 0.08em; } }
