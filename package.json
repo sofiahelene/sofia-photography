@@ -1,0 +1,20 @@
+{
+  "name": "sofia-photography",
+  "version": "1.0.0",
+  "description": "Sofia Lucas — photography portfolio",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port ${PORT:-5174}",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "gsap": "^3.15.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

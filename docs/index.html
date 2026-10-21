@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sofia Lucas — Photographie</title>
+    <link rel="icon" type="image/png" href="/STAR-blue.png">
+    <link rel="preload" as="image" href="/images/etoileblanche.png">
+    <script type="module" crossorigin src="/assets/index-BBuwVgeR.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CewPAhbK.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/inter-latin-wght-normal-Dx4kXJAl.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2">
+  </head>
+  <body>
+
+    <!-- Language selection splash (shown first) -->
+    <div id="lang-splash">
+      <button class="lang-btn" id="lang-fr">Français</button>
+      <button class="lang-btn" id="lang-en">English</button>
+    </div>
+
+    <!-- Projects page — rendered behind the splash at all times -->
+    <div id="projects-layer" class="active">
+      <div id="pf-app">
+        <div id="pf-page"></div>
+        <!-- After the page so the header's blend (on the landing opening) mixes with it -->
+        <header class="pf-header">
+          <a class="pf-logo-link" href="#home" data-page="home">
+            <img src="/images/etoileblanche.png" alt="Sofia Lucas" class="pf-logo-img">
+          </a>
+          <div class="pf-spacer"></div>
+          <a class="pf-title" href="#home" data-page="home">SOFIA LUCAS</a>
+          <nav class="pf-nav">
+            <div class="nav-dropdown" id="nav-dropdown">
+              <button type="button" class="nav-link nav-dropdown-toggle" id="nav-projets" aria-haspopup="true" aria-expanded="false" aria-controls="nav-dropdown-menu">PROJETS</button>
+              <div class="nav-dropdown-menu" id="nav-dropdown-menu"></div>
+            </div>
+            <a class="nav-link" data-page="contact"  href="#contact">CONTACT</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+  </body>
+</html>

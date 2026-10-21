@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+dist/
+.claude/
+# Duplicates of project photos (the grid uses the projects' own files) and old placeholders
+public/projects/GRID/
+public/projects/projet-0*/
+public/projects/home/
