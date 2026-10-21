@@ -2532,3 +2532,24 @@ html.landing-light #pf-cursor-canvas { mix-blend-mode: difference; }
    z-index; no z-index also lets its parts blend with the page underneath
    during the landing opening */
 #pf-app .pf-header { z-index: auto; }
+
+/* "Défiler pour découvrir" under SOFIA LUCAS on the landing opening: same
+   type as the header links, black on the white; gone once scrolling starts */
+.gp [data-gp-caption] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--gp-word-bottom, 60%) + 1.5rem);
+  margin: 0;
+  text-align: center;
+  color: #000;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  visibility: hidden;
+}
+.gp[data-gp-ready] [data-gp-caption] { visibility: visible; }
+.gp[data-gp-scrolled=true] [data-gp-caption] { visibility: hidden; }
+@media (max-width: 768px) { .gp [data-gp-caption] { font-size: 0.72rem; letter-spacing: 0.08em; } }

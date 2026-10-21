@@ -61,6 +61,7 @@ export const pages = {
     <div class="page page-inner page-landing">
       ${glyphPortalHTML({
         word: 'SOFIA LUCAS',
+        caption: 'Défiler pour découvrir',
         // The view through the letters is a copy of the grid's first screen,
         // so the hand-over to the real grid is seamless.
         field: grid(true),

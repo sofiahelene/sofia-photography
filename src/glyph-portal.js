@@ -68,7 +68,7 @@ function scrollParent(element) {
 }
 
 /** Markup for the portal. Pass the returned HTML into the page, then call mountGlyphPortal(). */
-export function glyphPortalHTML({ word, field, content, label = word, scrollLength = 2.4, fontFamily = DEFAULT_FONT, fontWeight = 900 }) {
+export function glyphPortalHTML({ word, field, content, caption = '', label = word, scrollLength = 2.4, fontFamily = DEFAULT_FONT, fontWeight = 900 }) {
   const uid = `gp-${++uidCounter}`;
   const length = clamp(scrollLength, 1, 8);
   return `
@@ -84,6 +84,7 @@ export function glyphPortalHTML({ word, field, content, label = word, scrollLeng
             </clipPath>
           </defs>
         </svg>
+        ${caption ? `<p data-gp-caption>${caption}</p>` : ''}
       </div>
       <div data-gp-content>${content}</div>
     </section>`;
@@ -107,7 +108,6 @@ export function mountGlyphPortal(section, { onProgress } = {}) {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d', { willReadFrequently: true });
   let disposed = false, raf = 0, dirty = true, active = true, ready = false;
-  const mountedAt = performance.now();
   let browserFrameSeen = false, stalled = false;
   let W = 1, H = 1, travel = 1, startScale = 1, endScale = 1;
   let center = { x: 0, y: 0 }, target = null;
@@ -186,6 +186,8 @@ export function mountGlyphPortal(section, { onProgress } = {}) {
     // Hand over to the real content the moment the camera move ends — the
     // content's margin (see style.css) puts it exactly over the field then.
     section.dataset.gpEntered = String(isStatic || t >= 0.999);
+    // The caption only shows before scrolling starts
+    section.dataset.gpScrolled = String(!isStatic && p > 0.005);
     // rise: 0 → 1 as the field's contents rise into place (1 when static)
     const reportedRise = isStatic ? 1 : rise;
     if (p !== lastProgress || reportedRise !== lastRise) {
@@ -206,6 +208,8 @@ export function mountGlyphPortal(section, { onProgress } = {}) {
     if (fontDirty) { ready = readInk(); fontDirty = false; }
     if (!ready) return;
     startScale = Math.min(W * 0.84 / bounds.width, H * .38 / bounds.height);
+    // Where the bottom of the word sits, for a caption placed under it
+    section.style.setProperty('--gp-word-bottom', `${H * .46 + bounds.height * startScale / 2}px`);
     // The whole viewport fits inside measured ink, even with the small camera bank.
     endScale = target ? Math.max(startScale, Math.hypot(W, H) / (target.radius * 1.35)) : startScale;
     // Distance from the top of the field's contents to its first image, so
@@ -220,7 +224,11 @@ export function mountGlyphPortal(section, { onProgress } = {}) {
     raf = 0;
     if (disposed) return;
     if (time !== undefined && !browserFrameSeen) {
-      browserFrameSeen = true; stalled ||= performance.now() - mountedAt > 2500; dirty = true;
+      // (The original also gave up on motion if this first frame came more
+      // than 2.5 s after mounting, to dodge hung fonts. This site loads the
+      // font before mounting, and a background tab legitimately delays the
+      // first frame, so that check is left out.)
+      browserFrameSeen = true; dirty = true;
     }
     if (dirty) { dirty = false; layout(); }
     if (ready) paint(position());

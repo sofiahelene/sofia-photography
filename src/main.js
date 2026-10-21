@@ -12,8 +12,10 @@ const projectSlugs = new Set(projects.map(p => p.slug));
 function colorizeImg(img) { /* logo already white — no recolour needed */ }
 
 // ── Language ──────────────────────────────────────────────────────────────────
+// The site is French only. Text in the code is written as t(french, english)
+// so an English version could be added back later; t() always returns French.
 window.LANG = 'fr';
-window.t = (fr, en) => window.LANG === 'en' ? en : fr;
+window.t = (fr) => fr;
 
 // ── Touch device detection ──────────────────────────────────────────────────────
 // Used to skip the mouse-driven home hero (never designed for touch) and to
@@ -25,9 +27,7 @@ if (IS_TOUCH_DEVICE) document.documentElement.classList.add('is-touch');
 // ── Session restore ───────────────────────────────────────────────────────────
 // sessionStorage survives normal refresh (F5) but clears on hard refresh
 // (Ctrl+Shift+R / Cmd+Shift+R) and new sessions — exactly the signal we need.
-const _savedLang = sessionStorage.getItem('pf-lang');
 const _savedPage = sessionStorage.getItem('pf-page');
-const _isReturning = (_savedLang === 'fr' || _savedLang === 'en') && !!pages[_savedPage];
 // Consume any path saved by 404.html redirect
 const _redirectPath = sessionStorage.getItem('pf-redirect-path');
 if (_redirectPath) { sessionStorage.removeItem('pf-redirect-path'); history.replaceState(null, '', _redirectPath); }
@@ -497,36 +497,6 @@ document.addEventListener('click', e => { if (!navDropdown.contains(e.target)) c
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProjectsMenu(); });
 renderProjectsMenu();
 
-// ── Language splash ───────────────────────────────────────────────────────────
-function applyLang(lang) {
-  window.LANG = lang;
-  sessionStorage.setItem('pf-lang', lang);
-  document.documentElement.lang = lang;
-  const navProjets = document.getElementById('nav-projets');
-  if (navProjets) { navProjets.textContent = lang === 'en' ? 'PROJECTS' : 'PROJETS'; initLetterSwap(navProjets); }
-  renderProjectsMenu();
-  const scrollHint = document.getElementById('scroll-hint');
-  if (scrollHint) scrollHint.textContent = lang === 'en' ? 'scroll' : 'défiler';
-  // Re-colorize header logo in case the img reloaded during language switch
-  const logoImg = document.querySelector('.pf-logo-img');
-  if (logoImg) colorizeImg(logoImg);
-}
-
-const langSplash = document.getElementById('lang-splash');
-const startSite = (lang) => {
-  applyLang(lang);
-  gsap.to(langSplash, {
-    opacity: 0, duration: 0.4, ease: 'power2.in',
-    onComplete: () => { langSplash.classList.add('lang-hidden'); },
-  });
-  // The home hero relies on mouse movement and isn't built for touch —
-  // touch visitors go straight to Projects instead.
-  navigateTo('home');
-};
-
-document.getElementById('lang-fr').addEventListener('click', () => startSite('fr'));
-document.getElementById('lang-en').addEventListener('click', () => startSite('en'));
-
 // Handle browser back/forward
 window.addEventListener('popstate', e => {
   const pageId = e.state?.pageId || pageFromPath(window.location.pathname);
@@ -541,19 +511,12 @@ function pageFromPath(path) {
 const _urlPage = pageFromPath(window.location.pathname);
 
 if (_urlPage && _urlPage !== 'home') {
-  // Direct link to a specific page — skip splash, use saved or default lang
-  applyLang(_savedLang || 'fr');
-  langSplash.classList.add('lang-hidden');
+  // Direct link to a specific page
   navigateTo(_urlPage);
-} else if (_isReturning) {
-  // Normal refresh — skip splash entirely, restore session state
-  applyLang(_savedLang);
-  langSplash.classList.add('lang-hidden');
-  // The home hero isn't built for touch — never restore into it there
+} else if (_savedPage && pages[_savedPage]) {
+  // Normal refresh — restore the page the visitor was on
   navigateTo(_savedPage);
 } else {
-  // First visit or hard refresh — load the post-splash page behind the splash.
-  // Touch devices skip the mouse-driven home hero and land straight on Projects.
   navigateTo('home');
 }
 
